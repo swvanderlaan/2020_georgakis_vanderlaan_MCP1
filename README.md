@@ -1,5 +1,7 @@
 # Monocyte-chemoattractant protein-1 Levels in Human Atherosclerosis Associate with Plaque Vulnerability
 
+ZENODO-link (this is forthcoming)
+
 Marios K. Georgakis,<sup>1, a</sup> Sander W. van der Laan,<sup>2, a</sup> Yaw Asare,<sup>1</sup> Joost M. Mekke,<sup>3</sup> Saskia Haitjema,<sup>4</sup> Arjan H. Schoneveld,<sup>4</sup> Dominique P.V. de Kleijn,<sup>3</sup> Gert J. de Borst,<sup>3</sup> Gerard Pasterkamp,<sup>4</sup> Martin Dichgans<sup>1, 5, *</sup>
 
 <sup>1</sup> Institute for Stroke and Dementia Research, University Hospital, LMU Munich, Munich, Germany
@@ -25,10 +27,6 @@ Surely these scripts will not work immediately on your systems, but they may be 
 R Notebook in `R markdown` with all.
 - *2020_georgakis_vanderlaan_MCP1.nb.html*</br>
 R Notebook in `HTML` to explore summary statistics between models 1, 2, and 3. Also creates files for plotting.
-- *script.sh*</br>
-[text]
-- *script.sh*</br>
-[text]
 
 
 #### Data availability

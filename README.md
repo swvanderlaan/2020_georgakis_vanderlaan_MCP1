@@ -1,6 +1,6 @@
 # Monocyte-chemoattractant protein-1 Levels in Human Atherosclerosis Associate with Plaque Vulnerability
 
-ZENODO-link (this is forthcoming)
+[![DOI](https://zenodo.org/badge/292553561.svg)](https://zenodo.org/badge/latestdoi/292553561)
 
 Marios K. Georgakis,<sup>1, a</sup> Sander W. van der Laan,<sup>2, a</sup> Yaw Asare,<sup>1</sup> Joost M. Mekke,<sup>3</sup> Saskia Haitjema,<sup>4</sup> Arjan H. Schoneveld,<sup>4</sup> Dominique P.V. de Kleijn,<sup>3</sup> Gert J. de Borst,<sup>3</sup> Gerard Pasterkamp,<sup>4</sup> Martin Dichgans<sup>1, 5, *</sup>
 

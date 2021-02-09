@@ -1,5 +1,5 @@
 ---
-title: "Monocyte-chemoattractant protein-1 Levels in Human Atherosclerosis Associate with Plaque Vulnerability"
+title: "Athero-Express Biobank Study -- MCP1 plaque levels (n ± 1,100; [pg/mL])."
 author: '[Sander W. van der Laan, PhD](https://swvanderlaan.github.io) | @swvanderlaan; Marios Georgakis; Rainer Malik; Martin Dichgans'
 date: '`r Sys.Date()`'
 output:
@@ -33,7 +33,7 @@ knitr::opts_chunk$set(fig.width = 12, fig.height = 8, fig.path = 'Figures/',
 
 Clean the environment.
 ```{r ClearEnvironment, include = FALSE}
-rm(list = ls())
+# rm(list = ls())
 ```
 
 Set locations, and the working directory.
@@ -43,16 +43,21 @@ Set locations, and the working directory.
 # ROOT_loc = "/Volumes/EliteProQx2Media"
 # GENOMIC_loc = "/Users/svanderlaan/iCloud/Genomics"
 
-### MacBook
-ROOT_loc = "/Users/swvanderlaan"
+### MacBook Pro
+# ROOT_loc = "/Users/swvanderlaan"
+# GENOMIC_loc = paste0(ROOT_loc, "/iCloud/Genomics")
+
+### MacBook Air
+ROOT_loc = "/Users/slaan3"
 GENOMIC_loc = paste0(ROOT_loc, "/iCloud/Genomics")
 
 ### Generic Locations
 AEDB_loc = paste0(GENOMIC_loc, "/AE-AAA_GS_DBs")
 LAB_loc = paste0(GENOMIC_loc, "/LabBusiness")
-RESULTS = paste0(ROOT_loc, "/git/swvanderlaan/2020_georgakis_vanderlaan_MCP1")
+RESULTS = paste0(ROOT_loc, "/PLINK/analyses/lookups/AE_20190912_010_MDICHGANS_SWVDLAAN_IL6_MCP1")
 RAWDATA = paste0(ROOT_loc, "/PLINK/_AE_ORIGINALS/AESCRNA/prepped_data")
-PROJECT_loc = paste0(ROOT_loc, "/git/swvanderlaan/2020_georgakis_vanderlaan_MCP1")
+
+PROJECT_loc = paste0(ROOT_loc, "/PLINK/analyses/lookups/AE_20190912_010_MDICHGANS_SWVDLAAN_IL6_MCP1")
 
 ### SOME VARIABLES WE NEED DOWN THE LINE
 cat("\nDefining phenotypes and datasets.\n")
@@ -133,7 +138,7 @@ install.packages.auto <- function(x) {
 ```
 
 Load those packages.
-```{r Setting: loading_packages, include = FALSE}
+```{r Setting: loading_packages, message=FALSE, warning=FALSE, include=}
 install.packages.auto("readr")
 install.packages.auto("optparse")
 install.packages.auto("tools")
@@ -168,8 +173,8 @@ install.packages.auto("ggpubr")
 We will create a datestamp and define the Utrecht Science Park Colour Scheme.
 ```{r Setting: Colors, include = FALSE}
 
-Today = format(as.Date(as.POSIXlt(Sys.time())), "%Y%m%d")
-Today.Report = format(as.Date(as.POSIXlt(Sys.time())), "%A, %B %d, %Y")
+# Today = format(as.Date(as.POSIXlt(Sys.time())), "%Y%m%d")
+# Today.Report = format(as.Date(as.POSIXlt(Sys.time())), "%A, %B %d, %Y")
 
 ### UtrechtScienceParkColoursScheme
 ###
@@ -394,10 +399,219 @@ head(AEDB_Protein_2015)
 ```
 
 
+## Plasma protein data
+Loading Athero-Express plasma protein measurements from 2019/2020 as measured using OLINK.
+```{r LoadAE PlasmaProteins OLINK}
+library(openxlsx)
+AEDB_PlasmaProtein_OLINK_CVD2raw <- openxlsx::read.xlsx(paste0(AEDB_loc, "/_AE_OLINK/OLINK_ERA_UMC_AE_StroesRentate/20200706_AtheroExpress_OlinkData_forR.xlsx"), sheet = "CVD2_forR")
+AEDB_PlasmaProtein_OLINK_CVD3raw <- openxlsx::read.xlsx(paste0(AEDB_loc, "/_AE_OLINK/OLINK_ERA_UMC_AE_StroesRentate/20200706_AtheroExpress_OlinkData_forR.xlsx"), sheet = "CVD3_forR")
+AEDB_PlasmaProtein_OLINK_CMraw <- openxlsx::read.xlsx(paste0(AEDB_loc, "/_AE_OLINK/OLINK_ERA_UMC_AE_StroesRentate/20200706_AtheroExpress_OlinkData_forR.xlsx"), sheet = "CM_forR")
+
+AEDB_PlasmaProtein_OLINK_ProteinInfo <- openxlsx::read.xlsx(paste0(AEDB_loc, "/_AE_OLINK/OLINK_ERA_UMC_AE_StroesRentate/20200706_AtheroExpress_OlinkData_forR.xlsx"), sheet = "ProteinInfo")
+
+AEDB_PlasmaProtein_OLINK_CVD2 <- AEDB_PlasmaProtein_OLINK_CVD2raw %>% filter(QC_Warning_CVD2 == "Pass")
+AEDB_PlasmaProtein_OLINK_CVD3 <- AEDB_PlasmaProtein_OLINK_CVD3raw %>% filter(QC_Warning_CVD3 == "Pass")
+AEDB_PlasmaProtein_OLINK_CM <- AEDB_PlasmaProtein_OLINK_CMraw %>% filter(QC_Warning_CM == "Pass")
+
+table(AEDB_PlasmaProtein_OLINK_CVD2raw$QC_Warning_CVD2)
+table(AEDB_PlasmaProtein_OLINK_CVD2$QC_Warning_CVD2)
+
+table(AEDB_PlasmaProtein_OLINK_CVD3raw$QC_Warning_CVD3)
+table(AEDB_PlasmaProtein_OLINK_CVD3$QC_Warning_CVD3)
+
+table(AEDB_PlasmaProtein_OLINK_CMraw$QC_Warning_CM)
+table(AEDB_PlasmaProtein_OLINK_CM$QC_Warning_CM)
+
+AEDB_PlasmaProtein_OLINK_CVD2$Plate_ID <- NULL
+AEDB_PlasmaProtein_OLINK_CVD3$Plate_ID <- NULL
+AEDB_PlasmaProtein_OLINK_CVD2$Order <- NULL
+AEDB_PlasmaProtein_OLINK_CVD3$Order <- NULL
+AEDB_PlasmaProtein_OLINK_CM$Order <- NULL
+
+temp <- merge(AEDB_PlasmaProtein_OLINK_CVD2, AEDB_PlasmaProtein_OLINK_CVD3, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER",
+              sort = FALSE, all.x = TRUE)
+
+AEDB_PlasmaProtein_OLINK <- merge(temp, AEDB_PlasmaProtein_OLINK_CM, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER",
+              sort = FALSE, all.x = TRUE)
+
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "ERA_UMC_AE_cardiometabolic_plt1_29-10-19"] <- "plate 1"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "ERA_UMC_AE_Cardiometabolic_plt2"] <- "plate 2"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "ERA_UMC_AE_Cardiometabolic_plt3"] <- "plate 3"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "ERA_UMC_AE_Cardiometabolic_plt4"] <- "plate 4"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "ERA_UMC_AE_Cardiometabolic_plt5"] <- "plate 5"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "ERA_UMC_AE_Cardiometabolic_pl6"] <- "plate 6"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "SMART_CM_plt10"] <- "plate 10"
+AEDB_PlasmaProtein_OLINK$Plate_ID[AEDB_PlasmaProtein_OLINK$Plate_ID == "SMART_plt11_CM"] <- "plate 11"
+
+olink_proteins <- c("BMP6", "ANGPT1", "ADM", "CD40L", "SLAMF7", "PGF", "ADAMTS13", "BOC", "IL4RA", "SRC", "IL1ra", "IL6", "TNFRSF10A", "STK4", "IDUA", 
+                    "TNFRSF11A", "PAR1", "TRAILR2", "PRSS27", "TIE2", "TF", "IL1RL2", "PDGF_subunit_B", "IL27", "IL17D", "CXCL1", "LOX1", "Gal9", "GIF", "SCF", 
+                    "IL18", "FGF21", "PIgR", "RAGE", "SOD2", "CTRC", "FGF23", "SPON2", "GH", "FS", "GLO1", "CD84", "PAPPA", "SERPINA12", "REN", "DECR1", 
+                    "MERTK", "KIM1", "THBS2", "TM", "VSIG2", "AMBP", "PRELP", "HO1", "XCL1", "IL16", "SORT1", "CEACAM8", "PTX3", "PSGL1", "CCL17", "CCL3", 
+                    "MMP7", "IgG_Fc_receptor_IIb", "ITGB1BP2", "DCN", "Dkk1", "LPL", "PRSS8", "AGRP", "HBEGF", "GDF2", "FABP2", "THPO", "MARCO", "GT", "BNP", 
+                    "MMP12", "ACE2", "PDL2", "CTSL1", "hOSCAR", "TNFRSF13B", "TGM2", "LEP", "CA5A", "HSP_27", "CD4", "NEMO", "VEGFD", "PARP1", "HAOX1", 
+                    "TNFRSF14", "LDL_receptor", "ITGB2", "IL17RA", "TNFR2", "MMP9", "EPHB4", "IL2RA", "OPG", "ALCAM", "TFF3", "SELP", "CSTB", "MCP1", "CD163", 
+                    "Gal3", "GRN", "NTproBNP", "BLM_hydrolase", "PLC", "LTBR", "Notch_3", "TIMP4", "CNTN1", "CDH5", "TLT2", "FABP4", "TFPI", "PAI", "CCL24", 
+                    "TR", "TNFRSF10C", "GDF15", "SELE", "AZU1", "DLK1", "SPON1", "MPO", "CXCL16", "IL6RA", "RETN", "IGFBP1", "CHIT1", "TRAP", "GP6", "PSPD", 
+                    "PI3", "EpCAM", "APN", "AXL", "IL1RT1", "MMP2", "FAS", "MB", "TNFSF13B", "PRTN3", "PCSK9", "UPAR", "OPN", "CTSD", "PGLYRP1", "CPA1", "JAMA", 
+                    "Gal4", "IL1RT2", "SHPS1", "CCL15", "CASP3", "uPA", "CPB1", "CHI3L1", "ST2", "tPA", "SCGB3A2", "EGFR", "IGFBP7", "CD93", "IL18BP", "COL1A1", 
+                    "PON3", "CTSZ", "MMP3", "RARRES2", "ICAM2", "KLK6", "PDGF_subunit_A", "TNFR1", "IGFBP2", "vWF", "PECAM1", "MEPE", "CCL16", "PRCP", "CA1", 
+                    "ICAM1", "CHL1", "TGFBI", "ENG", "PLTP", "SERPINA7", "IGFBP3", "CR2", "SERPINA5", "FCGR3B", "IGFBP6", "CDH1", "CCL5", "CCL14", "GNLY", 
+                    "NOTCH1", "PAM", "PROC", "CST3", "NCAM1", "PCOLCE", "LILRB1", "MET", "LTBP2", "IL7R", "VCAM1", "SELL", "F11", "COMP", "CA4", "PTPRS", 
+                    "MBL2", "TIMP1", "ANGPTL3", "REG3A", "SOD1", "CD46", "ITGAM", "TNC", "NID1", "CFHR5", "SPARCL1", "PLXNB2", "MEGF9", "ANG", "ST6GAL1", 
+                    "DPP4", "REG1A", "QPCT", "FCN2", "FETUB", "CES1", "CRTAC1", "TCN2", "PRSS2", "ICAM3", "SAA4", "CNDP1", "FCGR2A", "NRP1", "EFEMP1", "TIMD4", 
+                    "FAP", "TIE1", "THBS4", "F7", "GP1BA", "LYVE1", "CA3", "TGFBR3", "DEFA1", "CD59", "APOM", "OSMR", "LILRB2", "UMOD", "CCL18", "COL18A1", 
+                    "LCN2", "KIT", "C1QTNF1", "AOC3", "GAS6", "IGLC2", "PLA2G7", "TNXB", "MFAP5", "VASN", "LILRB5", "C2")
+
+length(olink_proteins)
+
+olink_proteins_rank = unlist(lapply(olink_proteins, paste0, "_rankNorm"))
+
+olink_proteins_short <- c("MCP1")
+olink_proteins_short_rank <- unlist(lapply(olink_proteins_short, paste0, "_rankNorm"))
+
+rm(temp)
+
+```
+
+### Inspect OLINK data
+
+We know that the proteins are not normally distributed and therefore we will standardise them as follows: 
+
+`z = ( x - μ ) / σ`
+
+Where for each sample, `x` equals the value of the variable, `μ` (_mu_) equals the mean of `x`, and `σ` (_sigma_) equals the standard deviation of `x`.
+
+```{r OLINKStandardize}
+for(PROTEIN in 1:length(olink_proteins_short)){
+  # AEDB_PlasmaProtein_OLINK$Z <- NULL
+  var.temp.z = olink_proteins_short_rank[PROTEIN]
+  var.temp = olink_proteins_short[PROTEIN]
+  
+  cat(paste0("\nSelecting ", var.temp, " and standardising: ", var.temp.z,".\n"))
+  cat(paste0("* changing ", var.temp, " to numeric.\n"))
+
+  AEDB_PlasmaProtein_OLINK <- AEDB_PlasmaProtein_OLINK %>%
+    mutate_each_(funs(as.numeric), olink_proteins_short) 
+  
+  cat(paste0("* standardising ", var.temp, 
+             " (mean: ",round(mean(!is.na(AEDB_PlasmaProtein_OLINK[,var.temp])), digits = 6),
+             ", n = ",sum(!is.na(AEDB_PlasmaProtein_OLINK[,var.temp])),").\n"))
+  
+  AEDB_PlasmaProtein_OLINK <- AEDB_PlasmaProtein_OLINK %>%
+      mutate_at(vars(var.temp), 
+        list(Z = ~ (AEDB_PlasmaProtein_OLINK[,var.temp] - mean(AEDB_PlasmaProtein_OLINK[,var.temp], na.rm = TRUE))/sd(AEDB_PlasmaProtein_OLINK[,var.temp], na.rm = TRUE))
+      )
+  # str(AEDB_PlasmaProtein_OLINK$Z)
+  cat(paste0("* renaming Z to ", var.temp.z,".\n"))
+  AEDB_PlasmaProtein_OLINK[,var.temp.z] <- NULL
+  names(AEDB_PlasmaProtein_OLINK)[names(AEDB_PlasmaProtein_OLINK) == "Z"] <- var.temp.z
+}
+
+rm(var.temp, var.temp.z)
+```
+
+
+Here we summarize some of these data in the subset of genetic data that passed QC.
+```{r OLINKSummary}
+
+for(PROTEIN in 1:length(olink_proteins_short)){
+  var.temp.z = olink_proteins_short_rank[PROTEIN]
+  var.temp = olink_proteins_short[PROTEIN]
+  
+  cat(paste0("\nSummarising data for ",var.temp," [AU]; n = ",sum(!is.na(AEDB_PlasmaProtein_OLINK[,var.temp])),".\n"))
+  print(summary(AEDB_PlasmaProtein_OLINK[,var.temp]))
+  print(summary(AEDB_PlasmaProtein_OLINK[,var.temp.z]))
+
+}
+rm(var.temp, var.temp.z, PROTEIN)
+
+```
+
+```{r OLINKVisualize }
+require("ggpubr")
+require("ggsci")
+
+# mypal = pal_npg("nrc", alpha = 0.7)(9)
+# mypal
+# ## [1] "#E64B35B2" "#4DBBD5B2" "#00A087B2" "#3C5488B2" "#F39B7FB2" "#8491B4B2"
+# ## [7] "#91D1C2B2" "#DC0000B2" "#7E6148B2"
+# library("scales")
+# show_col(mypal)
+
+for(PROTEIN in 1:length(olink_proteins_short)){
+  # metabolite_unit = ucorbioNMRDataDictionary[ucorbioNMRDataDictionary$Metabolite_NMR == NMRtargets[METABOLITE], "Concentration_NMR"]
+  cat(paste0("\nProcessing metabolite [ ",olink_proteins_short[PROTEIN]," (AU)].\n"))
+
+  var.temp = olink_proteins_short[PROTEIN]
+  var.temp.z = paste0(olink_proteins_short[PROTEIN],"_rankNorm")
+   
+  dt.temp <- subset(AEDB_PlasmaProtein_OLINK, select = c("STUDY_NUMBER", var.temp, var.temp.z, "Plate_ID"))
+  dt.temp[,2] <- as.numeric(dt.temp[,2])
+  
+  p1 <- ggpubr::gghistogram(dt.temp %>% filter(!is.na(Plate_ID)),
+                    x = var.temp,
+                    y = "..count..",
+                    color = "#4DBBD5B2", fill = "#4DBBD5B2",
+                    # palette = "npg",
+                    rug = TRUE,
+                    add = "mean",
+                    xlab = paste0(var.temp," [AU]."),
+                    ggtheme = theme_minimal())
+  
+  my_comparisons <- list( c("plate 1", "plate 2"), 
+                          c("plate 1", "plate 3"), 
+                          c("plate 1", "plate 4"), 
+                          c("plate 1", "plate 5"), 
+                          c("plate 1", "plate 6"), 
+                          c("plate 1", "plate 10"), 
+                          c("plate 1", "plate 11") )
+  p2 <- ggpubr::ggboxplot(data = dt.temp %>% filter(!is.na(Plate_ID)),
+                          x = "Plate_ID",
+                          y = var.temp.z,
+                          color = "Plate_ID",
+                          palette = "npg",
+                          add = c("mean", "jitter"),
+                          # error.plot = "errorbar",
+                          xlab = "plates used",
+                          ylab = paste0(var.temp.z," [AU]."),
+                          # ylim = c(0,4),
+                          ggtheme = theme_minimal()) #+
+    # stat_compare_means(method = "anova") #+      # Add global p-value
+    # stat_compare_means(comparisons = my_comparisons) + # Add pairwise comparisons p-value
+    # stat_compare_means(label = "p.signif", method = "t.test", ref.group = "plate 1")
+  
+  
+  p3 <- ggpubr::gghistogram(dt.temp %>% filter(!is.na(Plate_ID)),
+                    x = var.temp.z,
+                    y = "..count..",
+                    color = "#91D1C2B2", fill = "#91D1C2B2",
+                    # palette = "npg",
+                    rug = TRUE,
+                    add = "mean",
+                    xlab = paste0(var.temp.z," [AU]."),
+                    ggtheme = theme_minimal())
+  
+  require(patchwork)
+  # p4 <- ((p1 / p3 ) | (p2))
+  
+  p4 <- ggpar(p1, legend = "" ) / ggpar(p2 + rotate_x_text(45), legend = "")  | ggpar(p3, legend = "right")
+  
+  print(p4)
+  ggsave(filename = paste0(QC_loc, "/",Today,".",PROJECTNAME,".OLINK.",var.temp,".png"),
+         plot = p4, device = "png", width = 20, height = 20)
+  
+}
+  # rm(my_comparisons,
+  #    p1, p2, p3, p4,
+  #    var.temp, var.temp.z, dt.temp, PROTEIN)
+
+```
+
+
 
 
 ## Merging protein data
-We will merge these measurements to the AEDB (pg/mL measurements of MCP1). We also gathered more information on the experiment.
+We will merge these measurements to the AEDB for comparing pg/ug vs. pg/mL measurements of MCP1 - also in relation to plaque phenotypes. In addition we have more information the experiment and can correct for this.
 
 ```{r merge AEDB and Proteins}
 names(AEDB_Protein_2015)[names(AEDB_Protein_2015) == "IL6_pg_ml"] <- "IL6_pg_ml_2015"
@@ -413,22 +627,33 @@ names(AEDB_Protein_2015)[names(AEDB_Protein_2015) == "Tris_protein_conc_ug_ml"] 
 
 temp <- subset(AEDB_Protein_2015, select = c("STUDY_NUMBER", "IL6_pg_ml_2015", "IL6R_pg_ml_2015", "IL8_pg_ml_2015", "MCP1_pg_ml_2015", "RANTES_pg_ml_2015", "PAI1_pg_ml_2015", "MCSF_pg_ml_2015", "Adiponectin_ng_ml_2015", "Segment_isolated_Tris_2015", "Tris_protein_conc_ug_ml_2015"))
 
-AEDB <- merge(AEDBraw, temp, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", sort = FALSE,
-              all.x = TRUE)
-rm(temp)
+temp2 <- subset(AEDB_PlasmaProtein_OLINK, select = c("STUDY_NUMBER", "MCP1", "MCP1_rankNorm", "Plate_ID"))
+names(temp2)[names(temp2) == "MCP1"] <- "MCP1_plasma_olink"
+names(temp2)[names(temp2) == "MCP1_rankNorm"] <- "MCP1_plasma_olink_rankNorm"
+names(temp2)[names(temp2) == "Plate_ID"] <- "PlateID_plasma_olink"
 
-temp <- subset(AEDB, select = c("STUDY_NUMBER", "MCP1", "MCP1_pg_ug_2015", "MCP1_pg_ml_2015", "Segment_isolated_Tris_2015"))
+
+AEDBraw2 <- merge(AEDBraw, temp, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", sort = FALSE,
+              all.x = TRUE)
+
+AEDB <- merge(AEDBraw2, temp2, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", sort = FALSE,
+              all.x = TRUE)
+rm(temp, temp2, AEDBraw2)
+
+temp <- subset(AEDB, select = c("STUDY_NUMBER", "MCP1", "MCP1_pg_ug_2015", "MCP1_pg_ml_2015", "Segment_isolated_Tris_2015",
+                                "MCP1_plasma_olink", "MCP1_plasma_olink_rankNorm", "PlateID_plasma_olink"))
 dim(temp)
 head(temp)
 rm(temp)   
 ```
+
 
 #### Examine AEDB
 
 We can examine the contents of the Athero-Express Biobank dataset to know what each variable is called, what class (type) it has, and what the variable description is. 
 
 There is an excellent post on this: https://www.r-bloggers.com/working-with-spss-labels-in-r/. 
-```{r AEDB: describe}
+```{r AEDB: describe, message=FALSE, warning=FALSE}
 AEDB %>% sjPlot::view_df(show.type = TRUE,
                          show.frq = TRUE,
                          show.prc = TRUE,
@@ -1166,7 +1391,7 @@ rm(p1, p3)
 
 We will explore the plaque levels. As noted above, we will use `MCP1`, this was experiment 1 on the LUMINEX-platform and measurements are in pg/mL.
 
-```{r DataExploration: MCP1 plaque Exp1}
+```{r DataExploration: MCP1 plaque Exp1, message=FALSE, warning=FALSE}
 
 # summary(AEDB.CEA$MCP1)
 # 
@@ -5448,7 +5673,7 @@ rm(TRAIT, trait, currentDF, GLM.results, GLM.results.TEMP, fit, model_step)
 
 Here we calculate the plaque instability/vulnerability index and visualize the MCP1 levels in plaque.
 
-```{r Plaque Vulnerability}
+```{r Plaque Vulnerability, message=FALSE, warning=FALSE}
 # Plaque vulnerability
 
 table(AEDB.CEA$Macrophages.bin)
@@ -5541,7 +5766,7 @@ table(AEDB.CEA$Plaque_Vulnerability_Index, useNA = "ifany")
 ```
 
 Here we plot the levels of inverse-rank normal transformed `MCP1` plaque levels from experiment 1 and 2 to the `Plaque vulnerability index`. 
-```{r Fix ORyearGroup}
+```{r Fix ORyearGroup, message=FALSE, warning=FALSE}
 library(sjlabelled)
 
 attach(AEDB.CEA)
@@ -5777,14 +6002,245 @@ for (protein in 1:length(TRAITS.PROTEIN.RANK.extra)) {
 
 
 
+# Reviewer comments
 
+## Comparison plaque and plasma levels
+
+Here we draw a correlation between plasma and plaque MCP1 levels
+
+```{r PlasmaPlaqueSummaries}
+cat("Comparing descriptive statistics.\n")
+cat("* plasma levels, OLINK, arbitrary units [au]\n")
+summary(AEDB.CEA$MCP1_plasma_olink)
+
+cat("\n* plasma levels, OLINK, arbitrary units [au], inverse rank-normalized\n")
+summary(AEDB.CEA$MCP1_plasma_olink_rankNorm)
+
+cat("\n* plaque levels, LUMINEX, [pg/mL]\n")
+summary(AEDB.CEA$MCP1_pg_ml_2015)
+
+cat("'n* plaque levels, LUMINEX, [pg/mL], inverse rank-normalized\n")
+summary(AEDB.CEA$MCP1_pg_ml_2015_rank)
+
+
+```
+
+```{r PlasmaPlaqueCorrelations}
+
+ggpubr::ggscatter(AEDB.CEA, 
+                  x = "MCP1_plasma_olink_rankNorm", 
+                  y = "MCP1_pg_ml_2015_rank",
+                  color = "#1290D9",
+                  # fill = "Gender",
+                  # palette = c("#1290D9", "#DB003F"),
+                  add = "reg.line",
+                  add.params =  list(color = "black", linetype = 2),
+                  cor.coef = TRUE, cor.method = "spearman",
+                  xlim = c(-5, 5), ylim = c(-5, 5),
+                  xlab = "plasma levels",
+                  ylab = "plaque levels",
+                  title = "Comparing tissue-specific MCP1 levels, INT (plaque [pg/mL], plasma [au]",
+                  ggtheme = theme_minimal())
+
+ggsave(filename = paste0(QC_loc, "/",Today,".",PROJECTNAME,".Comparison.plasma_vs_plaque.pdf"),
+         plot = last_plot())
+ggsave(filename = paste0(QC_loc, "/",Today,".",PROJECTNAME,".Comparison.plasma_vs_plaque.png"),
+         plot = last_plot())
+
+
+
+```
+
+The overlap between plasma and plaque samples.
+
+```{r PlasmaPlaque Overlap}
+
+temp <- subset(AEDB.CEA, select = c("STUDY_NUMBER", "MCP1_pg_ml_2015_rank", "MCP1_plasma_olink_rankNorm"))
+
+temp_new <- temp[complete.cases(temp), ]
+dim(temp_new)
+
+# rm(temp, temp_new)
+
+```
+
+## Expression of MCP1 in single-cells from carotid plaques
+
+In a separate notebook we provide the results from the scRNAseq analysis.
+
+## Correlation with monocyte counts
+
+In the past we did measure monocyte counts in a _subset_ of the Athero-Express. We first inspect what the overlap is with the plaque MCP1 measurements.
+
+```{r Load MonocyteCount Samples}
+library(openxlsx)
+AEDB_mono <- openxlsx::read.xlsx(paste0(AEDB_loc, "/_AE_CircCells/AE_study_numbers_mono_FACS.xlsx"))
+
+head(AEDB_mono)
+
+AEDB_monoMCP1 <- merge(AEDB_mono, temp, by.x = "STUDY_NUMBER", by.y = "STUDY_NUMBER", sort = FALSE, all.x = TRUE)
+
+dim(AEDB_monoMCP1)
+
+```
+
+## Cytokines vs. MCP1 levels
+
+We explore whether cytokines (only the ones associated with MCP1) also associate with plaque vulnerability, and even in a multivariable model include them together with MCP1. This way we only indirectly provide some clues about whether MCP1 is the primary driver of plaque vulnerability. 
+A lack of association between cytokines and plaque vulnerability in these models, would imply that they are the result of MCP1 increase independently of the effects of MCP1 on plaque vulnerability. And thus, not all of them together represent the response to the stimuli.
+
+
+### Model 1: Univariate cytokines/chemokines vs plaque vulnerability
+
+In this model we correct for _Age_, _Gender_, and _year of surgery_ (`COVARIATES_M1`).
+
+Here we use the inverse-rank normalized data - visually this is more normally distributed.
+
+Analysis of the plaque vulnerability indez as a function of plaque cytokine levels.
+```{r CrossSec: Plaque_Vulnerability_Index - ordinal regression MODEL1 RANK, cytokines, include=TRUE, paged.print=TRUE}
+# For quick debug inspection
+# TRAITS.PROTEIN.RANK.extra = c("MCP1_pg_ml_2015_rank")
+# proteins_of_interest_rank_mcp1
+# proteins_of_interest_rank
+
+GLM.results <- data.frame(matrix(NA, ncol = 16, nrow = 0))
+for (protein in 1:length(proteins_of_interest_rank)) {
+  PROTEIN = proteins_of_interest_rank[protein]
+  cat(paste0("\nAnalysis of ",PROTEIN,".\n"))
+  TRAIT = "Plaque_Vulnerability_Index"
+    cat(paste0("\n- processing ",TRAIT,"\n\n"))
+    currentDF <- as.data.frame(AEDB.CEA %>%
+      dplyr::select(., PROTEIN, TRAIT, COVARIATES_M1, ORdate_epoch) %>%
+      filter(complete.cases(.))) %>%
+      filter_if(~is.numeric(.), all_vars(!is.infinite(.))) %>%
+      droplevels(.)
+    
+    # fix numeric OR year
+    currentDF$ORdate_year <- as.numeric(currentDF$ORdate_year)
+    
+    # for debug
+    # print(DT::datatable(currentDF))
+    # print(nrow(currentDF))
+    # print(str(currentDF))
+    # print(class(currentDF[,TRAIT]))
+    # table(currentDF$ORdate_year)
+    ### univariate
+     # + Hypertension.composite + DiabetesStatus + SmokerCurrent + 
+     #            Med.Statin.LLD + Med.all.antiplatelet + GFR_MDRD + BMI + 
+     #            CAD_history + Stroke_history + Peripheral.interv + stenose
+    fit <- polr(currentDF[,TRAIT] ~ currentDF[,PROTEIN] + Age + Gender + ORdate_year, 
+              data  =  currentDF, 
+              Hess = TRUE)
+    print(summary(fit))
+    
+    ## store table
+    (ctable <- coef(summary(fit)))
+
+    ## calculate and store p values
+    p <- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2
+    
+    ## combined table
+    print((ctable <- cbind(ctable, "p value" = p)))
+  }
+
+
+```
+
+### Model 2: MCP1 and plus 1 cytokine/chemokine vs plaque vulnerability
+
+In this model we correct for _Age_, _Gender_, and _year of surgery_, and MCP1 plus _one_ cytokines.
+
+
+```{r CrossSec: Plaque_Vulnerability_Index - ordinal regression MODEL2 RANK, cytokines, include=TRUE, paged.print=TRUE}
+
+COVARIATES_M1.extra = c("MCP1_pg_ml_2015_rank")
+
+GLM.results <- data.frame(matrix(NA, ncol = 16, nrow = 0))
+for (protein in 1:length(proteins_of_interest_rank)) {
+  PROTEIN = proteins_of_interest_rank[protein]
+  cat(paste0("\nAnalysis of ",PROTEIN,".\n"))
+  TRAIT = "Plaque_Vulnerability_Index"
+    cat(paste0("\n- processing ",TRAIT,"\n\n"))
+    currentDF <- as.data.frame(AEDB.CEA %>%
+      dplyr::select(., PROTEIN, TRAIT, COVARIATES_M1, COVARIATES_M1.extra, ORdate_epoch) %>%
+      filter(complete.cases(.))) %>%
+      filter_if(~is.numeric(.), all_vars(!is.infinite(.))) %>%
+      droplevels(.)
+    
+    # fix numeric OR year
+    currentDF$ORdate_year <- as.numeric(currentDF$ORdate_year)
+    
+    # for debug
+    # print(DT::datatable(currentDF))
+    # print(nrow(currentDF))
+    # print(str(currentDF))
+    # print(class(currentDF[,TRAIT]))
+    # table(currentDF$ORdate_year)
+    ### univariate
+     # + Hypertension.composite + DiabetesStatus + SmokerCurrent + 
+     #            Med.Statin.LLD + Med.all.antiplatelet + GFR_MDRD + BMI + 
+     #            CAD_history + Stroke_history + Peripheral.interv + stenose
+    fit <- polr(currentDF[,TRAIT] ~ currentDF[,PROTEIN] + Age + Gender + ORdate_year + MCP1_pg_ml_2015_rank, 
+              data  =  currentDF, 
+              Hess = TRUE)
+    print(summary(fit))
+    
+    ## store table
+    (ctable <- coef(summary(fit)))
+
+    ## calculate and store p values
+    p <- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2
+    
+    ## combined table
+    print((ctable <- cbind(ctable, "p value" = p)))
+  }
+
+```
+
+
+### Model 3: MCP1 and all cytokines/chemokines vs plaque vulnerability
+
+In this model we correct for _Age_, _Gender_, and _year of surgery_, and MCP1 plus _all_ cytokines (except MCP1 as measured through this technology, i.e. ELISA).
+
+
+```{r CrossSec: Plaque_Vulnerability_Index - ordinal regression MODEL3 RANK, cytokines, include=TRUE, paged.print=TRUE}
+
+COVARIATES_M1.extra = c("MCP1_pg_ml_2015_rank")
+
+GLM.results <- data.frame(matrix(NA, ncol = 16, nrow = 0))
+  TRAIT = "Plaque_Vulnerability_Index"
+
+    currentDF <- as.data.frame(AEDB.CEA %>%
+      dplyr::select(., proteins_of_interest_rank, TRAIT, COVARIATES_M1, COVARIATES_M1.extra, ORdate_epoch) %>%
+      filter(complete.cases(.))) %>%
+      filter_if(~is.numeric(.), all_vars(!is.infinite(.))) %>%
+      droplevels(.)
+    
+    # fix numeric OR year
+    currentDF$ORdate_year <- as.numeric(currentDF$ORdate_year)
+    
+    fit <- polr(currentDF[,TRAIT] ~ currentDF[,PROTEIN] + Age + Gender + ORdate_year + MCP1_pg_ml_2015_rank + IL2_rank + IL4_rank + IL5_rank + IL6_rank + IL8_rank + IL9_rank + IL10_rank + IL12_rank + IL13_rank + IL21_rank + INFG_rank + TNFA_rank + MIF_rank + MIP1a_rank + RANTES_rank + MIG_rank + IP10_rank + Eotaxin1_rank + TARC_rank + PARC_rank + MDC_rank + OPG_rank + sICAM1_rank + VEGFA_rank + TGFB_rank + MMP2_rank + MMP8_rank + MMP9_rank, 
+              data  =  currentDF, 
+              Hess = TRUE)
+    print(summary(fit))
+    
+    ## store table
+    (ctable <- coef(summary(fit)))
+
+    ## calculate and store p values
+    p <- pnorm(abs(ctable[, "t value"]), lower.tail = FALSE) * 2
+    
+    ## combined table
+    print((ctable <- cbind(ctable, "p value" = p)))
+
+```
 
 # Session information
 
 ------
 
     Version:      v1.0.19
-    Last update:  2020-09-03
+    Last update:  2021-02-09
     Written by:   Sander W. van der Laan (s.w.vanderlaan-2[at]umcutrecht.nl).
     Description:  Script to analyse MCP1 from the Ather-Express Biobank Study.
     Minimum requirements: R version 3.5.2 (2018-12-20) -- 'Eggshell Igloo', macOS Mojave (10.14.2).
@@ -5802,10 +6258,10 @@ for (protein in 1:length(TRAITS.PROTEIN.RANK.extra)) {
     
     
     **Changes log**
-    * v1.0.19 GitHub version with the final full-script. And prettyfied readme.md.
+    * v1.0.19 Updating for different macOS devices. Addressing reviewer comments.
     * v1.0.18 Changed 'asymptomatic vs. symptomatic' DotPlot to have dots instead of lines. Added boxplot for the same.
     * v1.0.17 Added regular, and per gender boxplots for risk factors, _etc_. Changed coloring for consistency. 
-    * v1.0.16 Create a pg/mL-only version. Switched to a new `.RMD`, but kept versioning.
+    * v1.0.16 Create a pg/mL-only version. Switched to a new `.RMD`, but kept versioning. Removed the plasma-based analyses.
     * v1.0.15 Add sex-stratified plots for MCP1 plaque levels by symptoms and plaque vulnerability index.
     * v1.0.14 Add analysis on plasma based MCP1 levels measured through OLINK, n ± 700, limited to symptomatic patients only.
     * v1.0.13 Splitting RMDs into plaque-focused, and one including plasma levels of MCP1.
@@ -5836,6 +6292,6 @@ save.image(paste0(PROJECT_loc, "/",Today,".",PROJECTNAME,".sample_selection.RDat
 ```
 
 ------
-<sup>&copy; 1979-2020 Sander W. van der Laan | s.w.vanderlaan-2[at]umcutrecht.nl | [swvanderlaan.github.io](https://swvanderlaan.github.io).</sup>
+<sup>&copy; 1979-2021 Sander W. van der Laan | s.w.vanderlaan-2[at]gmail.com | [swvanderlaan.github.io](https://swvanderlaan.github.io).</sup>
 ------
 

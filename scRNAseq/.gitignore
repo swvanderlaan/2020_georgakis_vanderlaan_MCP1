@@ -1,0 +1,31 @@
+# hidden files
+.*
+!.gitignore
+.DS_Store
+
+# vim files
+*~
+# outputs
+*.RData
+*.rds
+*.RDS
+
+# genetic data
+*.gen*
+*.dose*
+*.gen.gz*
+*.vcf.gz*
+*.vcf*
+
+# archived data
+_archived/*
+
+# pyton
+venv/
+*.egg-info/*
+__pycache__
+
+# tag files
+tags
+.Rproj.user
+

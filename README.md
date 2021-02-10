@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/292553561.svg)](https://zenodo.org/badge/latestdoi/292553561)
 
 #### This readme
-This readme accompanies the paper _"Common variants associated with OSMR expression contribute to carotid plaque vulnerability, but not to cardiovascular disease in humans."_ by [Van Keulen D. *et al*. **bioRxiv 2019**](https://doi.org/10.1101/576793).
+This readme accompanies the paper _"Monocyte-chemoattractant protein-1 Levels in Human Atherosclerosis Associate with Plaque Vulnerability."_ by [Georgakis M. & van der Laan S.W. *et al*. **bioRxiv 2020**](https://doi.org/10.1101/2020.09.04.20187955).
 
 
 --------------
@@ -46,6 +46,9 @@ Scripts will work within the context of a certain Linux environment, for example
 
 #### Versions
 
+* v1.0.3 Addressed reviewer comments.
+* v1.0.2 Submission release with update license type.
+* v1.0.1 Zenodo release, bares no difference to `v1.0.0`.
 * v1.0.0 Initial version.
 
 

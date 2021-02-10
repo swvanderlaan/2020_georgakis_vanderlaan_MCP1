@@ -28,7 +28,7 @@ Monocyte chemoattractant protein-1 (MCP-1) recruits monocytes to the atheroscler
 
 
 #### Analysis Scripts
-Surely these scripts will not work immediately on your systems, but they may be used and edited for local use.
+These scripts will not work immediately on your systems, but they are easily edited for local use given the required data.
  
 - *2020_georgakis_vanderlaan_MCP1.Rmd*</br>
 R Notebook in `R markdown` with all.
@@ -41,7 +41,7 @@ The data is available upon request through a MTA/DTA due to consent restrictions
 
 
 #### Notes
-Scripts will work within the context of a certain Linux environment, for example a CentOS7 system on a SUN Grid Engine background or macOS X Lion+ (version 10.7.[x]+). 
+The code will work within the context of R version 3.5.2 (2018-12-20) -- 'Eggshell Igloo', macOS Mojave (10.14.2). 
 
 
 #### Versions

@@ -1,4 +1,4 @@
-# Monocyte-chemoattractant protein-1 Levels in Human Atherosclerosis Associate with Plaque Vulnerability
+### Monocyte-chemoattractant protein-1 Levels in Human Atherosclerosis Associate with Plaque Vulnerability
 
 [![DOI](https://zenodo.org/badge/292553561.svg)](https://zenodo.org/badge/latestdoi/292553561)
 
@@ -29,24 +29,44 @@ Monocyte chemoattractant protein-1 (MCP-1) recruits monocytes to the atheroscler
 
 #### Analysis Scripts
 These scripts will not work immediately on your systems, but they are easily edited for local use given the required data.
- 
-- *2020_georgakis_vanderlaan_MCP1.Rmd*</br>
-R Notebook in `R markdown` with all.
-- *2020_georgakis_vanderlaan_MCP1.nb.html*</br>
-R Notebook in `HTML` to explore summary statistics between models 1, 2, and 3. Also creates files for plotting.
 
+*Epidemiological study*
+
+- *2020_georgakis_vanderlaan_MCP1.01.main_analysis.Rmd*</br>
+R Notebook in `R markdown` with all steps taken, double checks on data, and analysis of the manuscript.
+- *2020_georgakis_vanderlaan_MCP1.01.main_analysis.nb.html*</br>
+R Notebook in `HTML` the compiled `R markdown` notebook for easy reading in any browser.
+
+*Additional figures*
+- *2020_georgakis_vanderlaan_MCP1.02.additional_figures.Rmd*</br>
+R Notebook in `R markdown` for additional figures and (sub-)analyses.
+- *2020_georgakis_vanderlaan_MCP1.02.additional_figures.nb.html*</br>
+R Notebook in `HTML` the compiled `R markdown` notebook for easy reading in any browser.
+
+*Review comments*
+- *2020_georgakis_vanderlaan_MCP1.03.review_comments.Rmd*</br>
+R Notebook in `R markdown` that addresses some of the reviewer comments.
+- *2020_georgakis_vanderlaan_MCP1.03.review_comments.nb.html*</br>
+R Notebook in `HTML` the compiled `R markdown` notebook for easy reading in any browser.
+
+*scRNAseq analysis for the reviewer comments*
+
+- *scRNAseq/scRNAseq.Rmd*</br>
+R Notebook in `R markdown` with all steps taken, double checks on data, and analysis of scRNAseq data.
+- *scRNAseq/scRNAseq.nb.html*</br>
+R Notebook in `HTML` the compiled `R markdown` notebook of the scRNAseq analysis for easy reading in any browser.
 
 #### Data availability
 The data is available upon request through a MTA/DTA due to consent restrictions and EU/NL laws and regulations.
 
 
 #### Notes
-The code will work within the context of R version 3.5.2 (2018-12-20) -- 'Eggshell Igloo', macOS Mojave (10.14.2). 
+The code will work within the context of R version 3.5.2 (2018-12-20) -- 'Eggshell Igloo' with macOS Mojave (10.14.2); and given the data (see section **Data availability**). 
 
 
 #### Versions
 
-* v1.0.3 Addressed reviewer comments.
+* v1.0.3 Addressed reviewer comments. Redesigned the notebooks. Fixed notebooks to properly compile and show output. 
 * v1.0.2 Submission release with update license type.
 * v1.0.1 Zenodo release, bares no difference to `v1.0.0`.
 * v1.0.0 Initial version.

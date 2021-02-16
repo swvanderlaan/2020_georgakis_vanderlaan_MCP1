@@ -55,10 +55,10 @@ GENOMIC_loc = paste0(ROOT_loc, "/iCloud/Genomics")
 ### GitHub - Generic Locations
 AEDB_loc = paste0(GENOMIC_loc, "/AE-AAA_GS_DBs")
 LAB_loc = paste0(GENOMIC_loc, "/LabBusiness")
-RESULTS = paste0(ROOT_loc, "/git/swvanderlaan/2020_georgakis_vanderlaan_MCP1")
+RESULTS = paste0(ROOT_loc, "/PLINK/analyses/lookups/AE_20190912_010_MDICHGANS_SWVDLAAN_IL6_MCP1")
 RAWDATA = paste0(ROOT_loc, "/PLINK/_AE_ORIGINALS/AESCRNA/prepped_data")
 
-PROJECT_loc = paste0(ROOT_loc, "/git/swvanderlaan/2020_georgakis_vanderlaan_MCP1")
+PROJECT_loc = paste0(ROOT_loc, "/PLINK/analyses/lookups/AE_20190912_010_MDICHGANS_SWVDLAAN_IL6_MCP1")
 
 ### PLINK - Generic Locations
 # AEDB_loc = paste0(GENOMIC_loc, "/AE-AAA_GS_DBs")
